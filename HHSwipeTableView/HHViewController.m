@@ -10,6 +10,7 @@
 #import "HHSwipeTableViewCell.h"
 #import "HHSwipeTableView.h"
 #import "HHSwipeButton.h"
+#import "HHTapGestureRecognizer.h"
 
 @interface HHViewController ()
 @property (nonatomic, strong) NSMutableArray* cellContent;
@@ -130,7 +131,19 @@
     HHSwipeTableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
     cell.swipeId = @(indexPath.row);
     cell.scrollContentView.backgroundColor = [UIColor yellowColor];
+    
+    // Add a double tap gesture recognizer for testing
+    UITapGestureRecognizer *doubleTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTapped:)];
+    doubleTapGestureRecognizer.numberOfTapsRequired = 2;
+    [cell.singleTapGestureRecognizer requireGestureRecognizerToFail:doubleTapGestureRecognizer];
+    
+    [cell.scrollContentView addGestureRecognizer:doubleTapGestureRecognizer];
     return cell;
+}
+
+- (void)doubleTapped:(UITapGestureRecognizer *)gestureRecognizer
+{
+    NSLog(@"Double tapped");
 }
 
 - (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath

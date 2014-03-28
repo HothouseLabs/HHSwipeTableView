@@ -20,7 +20,7 @@
 
 - (void)touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event
 {
-    self.state = UIGestureRecognizerStateFailed;
+    self.state = UIGestureRecognizerStateCancelled;
 }
 
 - (void)touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event

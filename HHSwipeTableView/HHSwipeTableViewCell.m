@@ -8,7 +8,7 @@
 
 #import "HHSwipeTableViewCell.h"
 #import "HHSwipeTableView.h"
-#import "HHScrollView.h"
+//#import "HHScrollView.h"
 #import "HHTapGestureRecognizer.h"
 #import "HHSwipeButton.h"
 
@@ -21,7 +21,7 @@
 @property (nonatomic, strong) NSMutableDictionary* swipeStates;
 @end
 
-@interface HHSwipeTableViewCell () <HHScrollView>
+@interface HHSwipeTableViewCell ()
 @property (nonatomic, weak) HHSwipeTableView * tableView;
 @property (nonatomic, strong) NSArray* buttonsOnLeft;
 @property (nonatomic, strong) NSArray* buttonsOnRight;
@@ -29,13 +29,14 @@
 
 @property (nonatomic, assign, readonly) NSUInteger numberOfButtonsOnLeft;
 @property (nonatomic, assign, readonly) NSUInteger numberOfButtonsOnRight;
-@property (nonatomic, strong) HHScrollView * scrollView;
+@property (nonatomic, strong) UIScrollView * scrollView;
 @property (nonatomic, strong) UIView * scrollContentView;
 @property (nonatomic, strong) UIView * rightButtonContainerView;
 @property (nonatomic, strong) UIView * leftButtonContainerView;
 @property (nonatomic, strong) UIButton * moreButton;
 @property (nonatomic, strong) UIButton * deleteButton;
 @property (nonatomic, strong) UIButton * leftButton;
+@property (nonatomic, strong) HHTapGestureRecognizer *singleTapGestureRecognizer;
 @end
 
 @implementation HHSwipeTableViewCell
@@ -87,13 +88,12 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        self.scrollView = [[HHScrollView alloc] init];
+        self.scrollView = [[UIScrollView alloc] init];
         self.scrollView.showsHorizontalScrollIndicator = NO;
         self.scrollView.showsVerticalScrollIndicator = NO;
         self.scrollView.bounces = NO;
         self.scrollView.scrollEnabled = YES;
         self.scrollView.delegate = self;
-        self.scrollView.tapDelegate = self;
         
         [self.contentView addSubview:self.scrollView];
         
@@ -111,6 +111,10 @@
                                                      name: HHSwipeTableViewCellNeedsToCloseNotification
                                                    object: nil];
         
+        _singleTapGestureRecognizer = [[HHTapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
+        [_singleTapGestureRecognizer requireGestureRecognizerToFail:self.scrollView.panGestureRecognizer];
+        [_scrollContentView addGestureRecognizer:_singleTapGestureRecognizer];
+        [_scrollContentView setUserInteractionEnabled:YES];
         _swipeState = HHSwipeTableViewCellState_Center;
     }
     return self;
@@ -330,78 +334,73 @@
     }
 }
 
-#pragma mark - UIGestureRecognizerDelegate
-
-- (void)tapScrollView:(HHScrollView*)scrollView touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event
+- (void)handleSingleTap:(UITapGestureRecognizer *)gestureRecognizer
 {
-    NSLog(@"Setting highlighted...");
-    
-    if (self.swipeState == HHSwipeTableViewCellState_Center) {
-        [self setHighlighted:YES animated:YES];
-    }
-}
-
-- (void)tapScrollView:(HHScrollView*)scrollView touchesCancelled:(NSSet*)touches withEvent:(UIEvent*)event
-{
-    NSLog(@"Setting normal...");
-    [self setHighlighted:NO animated:NO];
-}
-
-- (void)tapScrollView:(HHScrollView*)scrollView touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event
-{
-    if (self.swipeState != HHSwipeTableViewCellState_Center) {
-        [self setSwipeState:HHSwipeTableViewCellState_Center animated:YES];
-        return;
-    }
-    
-    NSLog(@"did select....");
-    NSIndexPath* indexPath = [self.tableView indexPathForCell:self];
-    [self setHighlighted:NO animated:NO];
-    
-    BOOL newSelectState = !self.isSelected;
-    if (newSelectState) {
-        if ([self.tableView.delegate respondsToSelector:@selector(tableView:willSelectRowAtIndexPath:)]) {
-            [self.tableView.delegate tableView:self.tableView willSelectRowAtIndexPath:indexPath];
+    if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
+        NSLog(@"Setting highlighted...");
+        if (self.swipeState == HHSwipeTableViewCellState_Center) {
+            [self setHighlighted:YES animated:NO];
         }
-    } else {
-        if ([self.tableView.delegate respondsToSelector:@selector(tableView:willDeselectRowAtIndexPath:)]) {
-            [self.tableView.delegate tableView:self.tableView willDeselectRowAtIndexPath:indexPath];
+    } else if (gestureRecognizer.state == UIGestureRecognizerStateCancelled) {
+        
+        NSLog(@"Setting normal...");
+        [self setHighlighted:NO animated:NO];
+    } else if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
+        
+        if (self.swipeState != HHSwipeTableViewCellState_Center) {
+            [self setSwipeState:HHSwipeTableViewCellState_Center animated:YES];
+            return;
         }
-    }
-    
-    if (newSelectState) {
-        [self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
-        if ([self.tableView.delegate respondsToSelector:@selector(tableView:didSelectRowAtIndexPath:)]) {
-            [self.tableView.delegate tableView:self.tableView didSelectRowAtIndexPath:indexPath];
+        
+        NSLog(@"did select....");
+        NSIndexPath* indexPath = [self.tableView indexPathForCell:self];
+        [self setHighlighted:NO animated:NO];
+        
+        BOOL newSelectState = !self.isSelected;
+        if (newSelectState) {
+            if ([self.tableView.delegate respondsToSelector:@selector(tableView:willSelectRowAtIndexPath:)]) {
+                [self.tableView.delegate tableView:self.tableView willSelectRowAtIndexPath:indexPath];
+            }
+        } else {
+            if ([self.tableView.delegate respondsToSelector:@selector(tableView:willDeselectRowAtIndexPath:)]) {
+                [self.tableView.delegate tableView:self.tableView willDeselectRowAtIndexPath:indexPath];
+            }
         }
-    } else {
-        [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
-        if ([self.tableView.delegate respondsToSelector:@selector(tableView:didDeselectRowAtIndexPath:)]) {
-            [self.tableView.delegate tableView:self.tableView didDeselectRowAtIndexPath:indexPath];
+        
+        if (newSelectState) {
+            [self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+            if ([self.tableView.delegate respondsToSelector:@selector(tableView:didSelectRowAtIndexPath:)]) {
+                [self.tableView.delegate tableView:self.tableView didSelectRowAtIndexPath:indexPath];
+            }
+        } else {
+            [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
+            if ([self.tableView.delegate respondsToSelector:@selector(tableView:didDeselectRowAtIndexPath:)]) {
+                [self.tableView.delegate tableView:self.tableView didDeselectRowAtIndexPath:indexPath];
+            }
         }
     }
 }
 
 // For testing
-//- (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated
-//{
-//    [super setHighlighted:highlighted animated:animated];
-//
-//    if (highlighted) {
-//        self.scrollContentView.backgroundColor = [UIColor redColor];
-//    } else {
-//        self.scrollContentView.backgroundColor = [UIColor yellowColor];
-//    }
-//}
-//
-//- (void)setSelected:(BOOL)selected animated:(BOOL)animated
-//{
-//    [super setSelected:selected animated:animated];
-//    
-//    if (selected) {
-//        self.scrollContentView.backgroundColor = [UIColor blueColor];
-//    } else {
-//        self.scrollContentView.backgroundColor = [UIColor yellowColor];
-//    }
-//}
+- (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated
+{
+    [super setHighlighted:highlighted animated:animated];
+
+    if (highlighted) {
+        self.scrollContentView.backgroundColor = [UIColor redColor];
+    } else {
+        self.scrollContentView.backgroundColor = [UIColor yellowColor];
+    }
+}
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated
+{
+    [super setSelected:selected animated:animated];
+    
+    if (selected) {
+        self.scrollContentView.backgroundColor = [UIColor blueColor];
+    } else {
+        self.scrollContentView.backgroundColor = [UIColor yellowColor];
+    }
+}
 @end
