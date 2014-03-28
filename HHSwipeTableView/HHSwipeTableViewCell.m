@@ -22,7 +22,7 @@
 @end
 
 @interface HHSwipeTableViewCell () <UIScrollViewDelegate>
-@property (nonatomic, weak) UITableView * tableView;
+// @property (nonatomic, weak) UITableView * tableView;
 @property (nonatomic, weak) HHSwipeTableView * swipeTableView;
 @property (nonatomic, strong) NSArray* buttonsOnLeft;
 @property (nonatomic, strong) NSArray* buttonsOnRight;

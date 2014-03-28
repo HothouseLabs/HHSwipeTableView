@@ -20,7 +20,7 @@ typedef NS_ENUM(NSUInteger, HHSwipeTableViewCellState) {
 };
 
 @interface HHSwipeTableViewCell : UITableViewCell
-@property (nonatomic, weak, readonly) UITableView * tableView;
+@property (nonatomic, weak) UITableView * tableView;
 @property (nonatomic, strong, readonly) UIScrollView * scrollView;
 @property (nonatomic, strong, readonly) UIView * scrollContentView;
 @property (nonatomic, strong) id swipeId; // This helps the table view to identify the swipe state of the object so on reloadData the correct state can be recovered
