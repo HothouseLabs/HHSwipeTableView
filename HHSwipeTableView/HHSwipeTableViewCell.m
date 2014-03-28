@@ -30,7 +30,7 @@
 @property (nonatomic, assign, readonly) NSUInteger numberOfButtonsOnLeft;
 @property (nonatomic, assign, readonly) NSUInteger numberOfButtonsOnRight;
 @property (nonatomic, strong) HHScrollView * scrollView;
-@property (nonatomic, strong) UIView * innerContentView;
+@property (nonatomic, strong) UIView * scrollContentView;
 @property (nonatomic, strong) UIView * rightButtonContainerView;
 @property (nonatomic, strong) UIView * leftButtonContainerView;
 @property (nonatomic, strong) UIButton * moreButton;
@@ -97,11 +97,11 @@
         
         [self.contentView addSubview:self.scrollView];
         
-        self.innerContentView = [[UIView alloc] init];
+        self.scrollContentView = [[UIView alloc] init];
         
-        self.innerContentView.backgroundColor = [UIColor yellowColor];
+        self.scrollContentView.backgroundColor = [UIColor yellowColor];
         
-        [self.scrollView addSubview:self.innerContentView];
+        [self.scrollView addSubview:self.scrollContentView];
         
         [[NSNotificationCenter defaultCenter] addObserver: self
                                                  selector: @selector(onOpen:)
@@ -189,14 +189,14 @@
     // will prevent the tap events on the button being disabled.
     // See setButtonFrameWithContentOffsetX on adjusting the button position
     // for an illustion of the swipe.
-    [self.scrollView insertSubview:self.leftButtonContainerView belowSubview:self.innerContentView];
+    [self.scrollView insertSubview:self.leftButtonContainerView belowSubview:self.scrollContentView];
     
-    [self.scrollView insertSubview:self.rightButtonContainerView belowSubview:self.innerContentView];
+    [self.scrollView insertSubview:self.rightButtonContainerView belowSubview:self.scrollContentView];
     
     self.contentView.frame = self.bounds;
     self.scrollView.frame = self.contentView.frame;
     self.scrollView.contentSize = CGSizeMake(self.contentView.frame.size.width + [self contentOffsetXForRight], self.scrollView.frame.size.height);
-    self.innerContentView.frame = CGRectMake([self contentOffsetXForCenter], 0, self.scrollView.frame.size.width, self.scrollView.frame.size.height);
+    self.scrollContentView.frame = CGRectMake([self contentOffsetXForCenter], 0, self.scrollView.frame.size.width, self.scrollView.frame.size.height);
     
     CGFloat buttonHeight = self.frame.size.height; // use the cell height as the button width and height
     [self.buttonsOnLeft enumerateObjectsUsingBlock:^(HHSwipeButton *button, NSUInteger idx, BOOL* stop) {
@@ -249,12 +249,12 @@
 - (void)setButtonFrameWithContentOffsetX:(CGFloat)x
 {
     CGRect leftFrame = self.leftButtonContainerView.frame;
-    leftFrame.origin.x = self.innerContentView.frame.origin.x - leftFrame.size.width + x;
+    leftFrame.origin.x = self.scrollContentView.frame.origin.x - leftFrame.size.width + x;
     NSLog(@"Left frame: %f", leftFrame.origin.x);
     self.leftButtonContainerView.frame = leftFrame;
     
     CGRect rightFrame = self.rightButtonContainerView.frame;
-    rightFrame.origin.x = self.innerContentView.frame.size.width - rightFrame.size.width + x;
+    rightFrame.origin.x = self.scrollContentView.frame.size.width - rightFrame.size.width + x;
     NSLog(@"Right frame: %f", rightFrame.origin.x);
     self.rightButtonContainerView.frame = rightFrame;
 }
@@ -389,9 +389,9 @@
     [super setHighlighted:highlighted animated:animated];
     
     if (highlighted) {
-        self.innerContentView.backgroundColor = [UIColor redColor];
+        self.scrollContentView.backgroundColor = [UIColor redColor];
     } else {
-        self.innerContentView.backgroundColor = [UIColor yellowColor];
+        self.scrollContentView.backgroundColor = [UIColor yellowColor];
     }
 }
 
@@ -400,9 +400,9 @@
     [super setSelected:selected animated:animated];
     
     if (selected) {
-        self.innerContentView.backgroundColor = [UIColor blueColor];
+        self.scrollContentView.backgroundColor = [UIColor blueColor];
     } else {
-        self.innerContentView.backgroundColor = [UIColor yellowColor];
+        self.scrollContentView.backgroundColor = [UIColor yellowColor];
     }
 }
 @end
