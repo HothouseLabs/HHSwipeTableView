@@ -99,8 +99,6 @@
         
         self.scrollContentView = [[UIView alloc] init];
         
-        self.scrollContentView.backgroundColor = [UIColor yellowColor];
-        
         [self.scrollView addSubview:self.scrollContentView];
         
         [[NSNotificationCenter defaultCenter] addObserver: self
