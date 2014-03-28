@@ -41,7 +41,9 @@
 - (id)dequeueReusableCellWithIdentifier:(NSString*)identifier forIndexPath:(NSIndexPath*)indexPath
 {
     HHSwipeTableViewCell* cell = (HHSwipeTableViewCell*)[super dequeueReusableCellWithIdentifier:identifier];
-    NSAssert([cell isKindOfClass:[HHSwipeTableViewCell class]], @"Cell should be of class HHSwipeTableCell");
+    if (![cell isKindOfClass:[HHSwipeTableViewCell class]]) {
+        return cell;
+    }
     
     cell.tableView = self;
     
