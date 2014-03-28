@@ -128,6 +128,8 @@
 - (void)setTableView:(UITableView *)tableView
 {
     _tableView = tableView;
+    [self.singleTapGestureRecognizer requireGestureRecognizerToFail:tableView.panGestureRecognizer];
+    
     if ([tableView isKindOfClass:[HHSwipeTableView class]]) {
         _swipeTableView = (HHSwipeTableView *)tableView;
     }
