@@ -127,9 +127,9 @@
 
 - (UITableViewCell *) tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath
 {
-    HHSwipeTableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"
-                                            forIndexPath:indexPath];
+    HHSwipeTableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
     cell.swipeId = @(indexPath.row);
+    cell.scrollContentView.backgroundColor = [UIColor yellowColor];
     return cell;
 }
 
