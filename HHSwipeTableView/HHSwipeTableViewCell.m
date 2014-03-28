@@ -21,8 +21,9 @@
 @property (nonatomic, strong) NSMutableDictionary* swipeStates;
 @end
 
-@interface HHSwipeTableViewCell ()
-@property (nonatomic, weak) HHSwipeTableView * tableView;
+@interface HHSwipeTableViewCell () <UIScrollViewDelegate>
+@property (nonatomic, weak) UITableView * tableView;
+@property (nonatomic, weak) HHSwipeTableView * swipeTableView;
 @property (nonatomic, strong) NSArray* buttonsOnLeft;
 @property (nonatomic, strong) NSArray* buttonsOnRight;
 @property (nonatomic, assign) CGFloat buttonWidth;
@@ -124,6 +125,14 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+- (void)setTableView:(UITableView *)tableView
+{
+    _tableView = tableView;
+    if ([tableView isKindOfClass:[HHSwipeTableView class]]) {
+        _swipeTableView = (HHSwipeTableView *)tableView;
+    }
+}
+
 - (void)onOpen:(NSNotification*)notification
 {
     if (notification.object != self) {
@@ -148,7 +157,7 @@
     
     _swipeState = swipeState;
     if (self.swipeId) {
-        self.tableView.swipeStates[self.swipeId] = @(swipeState);
+        self.swipeTableView.swipeStates[self.swipeId] = @(swipeState);
     }
 }
 
@@ -226,7 +235,7 @@
     self.rightButtonContainerView.frame = CGRectMake(self.frame.size.width - self.buttonsOnRight.count * self.buttonWidth, 0, self.buttonsOnRight.count * self.buttonWidth, buttonHeight);
     
     if (self.swipeId) {
-        HHSwipeTableViewCellState swipeState = [self.tableView.swipeStates[self.swipeId] unsignedIntegerValue];
+        HHSwipeTableViewCellState swipeState = [self.swipeTableView.swipeStates[self.swipeId] unsignedIntegerValue];
         if (swipeState == HHSwipeTableViewCellState_None) {
             [self setSwipeState:HHSwipeTableViewCellState_Center animated:NO];
         } else {
@@ -244,7 +253,7 @@
     HHSwipeButton *button = (HHSwipeButton *)sender;
     
     NSIndexPath *indexPath = [self.tableView indexPathForCell:self];
-    [self.tableView.swipeDelegate swipeTableView:self.tableView didTapButtonAtIndex:button.indexInContainer inState:button.swipeState forRowAtIndexPath:indexPath];
+    [self.swipeTableView.swipeDelegate swipeTableView:self.swipeTableView didTapButtonAtIndex:button.indexInContainer inState:button.swipeState forRowAtIndexPath:indexPath];
 }
 
 #pragma mark - UIScrollViewDelegate
