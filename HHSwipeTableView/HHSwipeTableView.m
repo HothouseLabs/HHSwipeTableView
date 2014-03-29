@@ -35,7 +35,9 @@
 {
     [super setContentOffset:contentOffset];
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:HHSwipeTableViewCellNeedsToCloseNotification object:self];
+    if (self.isTracking) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:HHSwipeTableViewCellNeedsToCloseNotification object:self];
+    }
 }
 
 - (id)dequeueReusableCellWithIdentifier:(NSString*)identifier forIndexPath:(NSIndexPath*)indexPath

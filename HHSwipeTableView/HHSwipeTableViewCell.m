@@ -137,7 +137,7 @@
 
 - (void)onOpen:(NSNotification*)notification
 {
-    if (notification.object != self) {
+    if (![[notification.object swipeId] isEqual:self.swipeId]) {
         if (self.swipeState != HHSwipeTableViewCellState_Center) {
             [self setSwipeState:HHSwipeTableViewCellState_Center animated:YES];
         }
@@ -240,7 +240,7 @@
         HHSwipeTableViewCellState swipeState = [self.swipeTableView.swipeStates[self.swipeId] unsignedIntegerValue];
         if (swipeState == HHSwipeTableViewCellState_None) {
             [self setSwipeState:HHSwipeTableViewCellState_Center animated:NO];
-        } else {
+        } else if (swipeState != self.swipeState) {
             [self setSwipeState:swipeState animated:NO];
         }
     } else {
@@ -282,8 +282,9 @@
     
     [self setButtonFrameWithContentOffsetX:scrollView.contentOffset.x];
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:HHSwipeTableViewCellDidOpenNotification object:self];
-    
+    if (scrollView.isTracking) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:HHSwipeTableViewCellDidOpenNotification object:self];
+    }
     // Prevent pan gesture to go over the current intended end state
     CGPoint contentOffset = scrollView.contentOffset;
     
