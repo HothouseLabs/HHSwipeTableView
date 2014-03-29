@@ -56,7 +56,7 @@
     // Call reload table repetitively to test for resilience of the table view cell states
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         while (YES) {
-            NSLog(@"<============  reload data ==============>");
+            HHTrace(@"<============  reload data ==============>");
             usleep(1000000); // Adjust this value to test resilience
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.tableView reloadData];
@@ -97,7 +97,7 @@
 {
     if (state == HHSwipeTableViewCellState_Left) {
         if (index == 0) {
-            NSLog(@"No op, return");
+            HHTrace(@"No op, return");
             HHSwipeTableViewCell *cell = (HHSwipeTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
             [cell setSwipeState:HHSwipeTableViewCellState_Center animated:YES];
         } else {
@@ -143,12 +143,12 @@
 
 - (void)doubleTapped:(UITapGestureRecognizer *)gestureRecognizer
 {
-    NSLog(@"Double tapped");
+    HHTrace(@"Double tapped");
 }
 
 - (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath
 {
-    NSLog(@"Selected %@", indexPath);
+    HHTrace(@"Selected %@", indexPath);
 }
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex

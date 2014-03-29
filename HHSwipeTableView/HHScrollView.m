@@ -36,7 +36,7 @@
 
 - (void)touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event
 {
-    NSLog(@"Touch on scroll view ended");
+    HHTrace(@"Touch on scroll view ended");
     if (!self.dragging) {
         [self.tapDelegate tapScrollView:self touchesEnded:touches withEvent:event];
     } else {

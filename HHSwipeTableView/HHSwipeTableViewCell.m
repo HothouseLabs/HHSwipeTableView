@@ -155,7 +155,7 @@
         return;
     }
     
-    NSLog(@"Swipe from state: %u to state: %u", _swipeState, swipeState);
+    HHTrace(@"Swipe from state: %u to state: %u", _swipeState, swipeState);
     
     _swipeState = swipeState;
     if (self.swipeId) {
@@ -165,7 +165,7 @@
 
 - (void)setSwipeState:(HHSwipeTableViewCellState)swipeState animated:(BOOL)animated
 {
-    NSLog(@"Animate swipe from state: %u to state: %u", _swipeState, swipeState);
+    HHTrace(@"Animate swipe from state: %u to state: %u", _swipeState, swipeState);
     
     if (!animated) {
         [self setContentOffsetXForState:swipeState];
@@ -263,19 +263,19 @@
 {
     CGRect leftFrame = self.leftButtonContainerView.frame;
     leftFrame.origin.x = self.scrollContentView.frame.origin.x - leftFrame.size.width + x;
-    NSLog(@"Left frame: %f", leftFrame.origin.x);
+    HHTrace(@"Left frame: %f", leftFrame.origin.x);
     self.leftButtonContainerView.frame = leftFrame;
     
     CGRect rightFrame = self.rightButtonContainerView.frame;
     rightFrame.origin.x = self.scrollContentView.frame.size.width - rightFrame.size.width + x;
-    NSLog(@"Right frame: %f", rightFrame.origin.x);
+    HHTrace(@"Right frame: %f", rightFrame.origin.x);
     self.rightButtonContainerView.frame = rightFrame;
 }
 
 
 - (void)scrollViewDidScroll:(UIScrollView*)scrollView
 {
-    NSLog(@"currentState: %u, scrollViewDidScroll: scrollView.contentOffset: %f", self.swipeState, scrollView.contentOffset.x);
+    HHTrace(@"currentState: %u, scrollViewDidScroll: scrollView.contentOffset: %f", self.swipeState, scrollView.contentOffset.x);
     
     [self setHighlighted:NO animated:NO];
     [self setSelected:NO animated:NO];
@@ -299,7 +299,7 @@
 - (void)scrollViewWillEndDragging:(UIScrollView*)scrollView
                      withVelocity:(CGPoint)velocity
               targetContentOffset:(inout CGPoint*)targetContentOffset {
-    NSLog(@"currentState: %u, scrollViewWillEndDragging: scrollView.contentOffset: %f, velocity: %f, targetContentOffset: %f", self.swipeState, scrollView.contentOffset.x, velocity.x, targetContentOffset->x);
+    HHTrace(@"currentState: %u, scrollViewWillEndDragging: scrollView.contentOffset: %f, velocity: %f, targetContentOffset: %f", self.swipeState, scrollView.contentOffset.x, velocity.x, targetContentOffset->x);
     switch (self.swipeState) {
         case HHSwipeTableViewCellState_Left:
         {
@@ -348,13 +348,13 @@
 - (void)handleSingleTap:(UITapGestureRecognizer *)gestureRecognizer
 {
     if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
-        NSLog(@"Setting highlighted...");
+        HHTrace(@"Setting highlighted...");
         if (self.swipeState == HHSwipeTableViewCellState_Center) {
             [self setHighlighted:YES animated:NO];
         }
     } else if (gestureRecognizer.state == UIGestureRecognizerStateCancelled) {
         
-        NSLog(@"Setting normal...");
+        HHTrace(@"Setting normal...");
         [self setHighlighted:NO animated:NO];
     } else if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
         
@@ -363,7 +363,7 @@
             return;
         }
         
-        NSLog(@"did select....");
+        HHTrace(@"did select....");
         NSIndexPath* indexPath = [self.tableView indexPathForCell:self];
         [self setHighlighted:NO animated:NO];
         
