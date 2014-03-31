@@ -379,6 +379,8 @@
             }
         }
         
+        self.selected = newSelectState;
+        
         if (newSelectState) {
             [self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
             if ([self.tableView.delegate respondsToSelector:@selector(tableView:didSelectRowAtIndexPath:)]) {
