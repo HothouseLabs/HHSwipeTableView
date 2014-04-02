@@ -92,7 +92,7 @@
         self.scrollView = [[UIScrollView alloc] init];
         self.scrollView.showsHorizontalScrollIndicator = NO;
         self.scrollView.showsVerticalScrollIndicator = NO;
-        self.scrollView.bounces = NO;
+        self.scrollView.bounces = YES;
         self.scrollView.scrollEnabled = YES;
         self.scrollView.delegate = self;
         
@@ -261,6 +261,15 @@
 #pragma mark - UIScrollViewDelegate
 - (void)setButtonFrameWithContentOffsetX:(CGFloat)x
 {
+    // Hide the opposite buttons to remove defect while bouncing, and also when the length of left/right buttons overlap
+    if (x < [self contentOffsetXForCenter]) {
+        self.leftButtonContainerView.hidden = NO;
+        self.rightButtonContainerView.hidden = YES;
+    } else if (x > [self contentOffsetXForCenter]) {
+        self.leftButtonContainerView.hidden = YES;
+        self.rightButtonContainerView.hidden = NO;
+    }
+    
     CGRect leftFrame = self.leftButtonContainerView.frame;
     leftFrame.origin.x = self.scrollContentView.frame.origin.x - leftFrame.size.width + x;
     HHTrace(@"Left frame: %f", leftFrame.origin.x);
@@ -293,13 +302,15 @@
     } else if (self.swipeState == HHSwipeTableViewCellState_Left && contentOffset.x > [self contentOffsetXForCenter]) {
         contentOffset.x = [self contentOffsetXForCenter];
     }
+
     scrollView.contentOffset = contentOffset;
 }
 
 
 - (void)scrollViewWillEndDragging:(UIScrollView*)scrollView
                      withVelocity:(CGPoint)velocity
-              targetContentOffset:(inout CGPoint*)targetContentOffset {
+              targetContentOffset:(inout CGPoint*)targetContentOffset
+{
     HHTrace(@"currentState: %u, scrollViewWillEndDragging: scrollView.contentOffset: %f, velocity: %f, targetContentOffset: %f", self.swipeState, scrollView.contentOffset.x, velocity.x, targetContentOffset->x);
     switch (self.swipeState) {
         case HHSwipeTableViewCellState_Left:
