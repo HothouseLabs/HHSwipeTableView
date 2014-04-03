@@ -95,6 +95,7 @@
         self.scrollView.bounces = YES;
         self.scrollView.scrollEnabled = YES;
         self.scrollView.delegate = self;
+        self.scrollView.scrollsToTop = NO;
         
         [self.contentView addSubview:self.scrollView];
         
