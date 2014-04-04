@@ -320,7 +320,7 @@
     switch (self.swipeState) {
         case HHSwipeTableViewCellState_Left:
         {
-            if (targetContentOffset->x > [self contentOffsetXForCenter] ||
+            if (targetContentOffset->x >= [self contentOffsetXForCenter] ||
                 (velocity.x == 0 && targetContentOffset->x <= [self contentOffsetXForCenter])) {
                 targetContentOffset->x = [self contentOffsetXForCenter];
                 self.swipeState = HHSwipeTableViewCellState_Center;
