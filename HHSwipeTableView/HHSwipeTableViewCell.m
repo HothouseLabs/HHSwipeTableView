@@ -8,7 +8,7 @@
 
 #import "HHSwipeTableViewCell.h"
 #import "HHSwipeTableView.h"
-//#import "HHScrollView.h"
+// #import "HHScrollView.h"
 #import "HHTapGestureRecognizer.h"
 #import "HHSwipeButton.h"
 
@@ -219,7 +219,9 @@
         button.frame = CGRectMake(idx * self.buttonWidth, 0, self.buttonWidth, buttonHeight);
         button.indexInContainer = idx;
         button.swipeState = HHSwipeTableViewCellState_Left;
-        [button addTarget:self action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
+        [button.tapGestureRecognizer addTarget:self action:@selector(buttonPressed:)];
+        [self.scrollView.panGestureRecognizer requireGestureRecognizerToFail:button.tapGestureRecognizer];
+        [self.singleTapGestureRecognizer requireGestureRecognizerToFail:button.tapGestureRecognizer];
         [self.leftButtonContainerView addSubview:button];
     }];
     
@@ -231,7 +233,9 @@
         button.frame = CGRectMake(idx * self.buttonWidth, 0, self.buttonWidth, buttonHeight);
         button.indexInContainer = idx;
         button.swipeState = HHSwipeTableViewCellState_Right;
-        [button addTarget:self action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
+        [button.tapGestureRecognizer addTarget:self action:@selector(buttonPressed:)];
+        [self.scrollView.panGestureRecognizer requireGestureRecognizerToFail:button.tapGestureRecognizer];
+        [self.singleTapGestureRecognizer requireGestureRecognizerToFail:button.tapGestureRecognizer];
         [self.rightButtonContainerView addSubview:button];
     }];
     
@@ -251,9 +255,9 @@
     [self setButtonFrameWithContentOffsetX:self.scrollView.contentOffset.x];
 }
 
-- (void)buttonPressed:(id)sender
+- (void)buttonPressed:(UITapGestureRecognizer *)tapGestureRecognizer
 {
-    HHSwipeButton *button = (HHSwipeButton *)sender;
+    HHSwipeButton *button = (HHSwipeButton *)tapGestureRecognizer.view;
     
     NSIndexPath *indexPath = [self.tableView indexPathForCell:self];
     [self.swipeTableView.swipeDelegate swipeTableView:self.swipeTableView didTapButtonAtIndex:button.indexInContainer inState:button.swipeState forRowAtIndexPath:indexPath];
@@ -307,12 +311,12 @@
     scrollView.contentOffset = contentOffset;
 }
 
-
 - (void)scrollViewWillEndDragging:(UIScrollView*)scrollView
                      withVelocity:(CGPoint)velocity
               targetContentOffset:(inout CGPoint*)targetContentOffset
 {
-    HHTrace(@"currentState: %u, scrollViewWillEndDragging: scrollView.contentOffset: %f, velocity: %f, targetContentOffset: %f", self.swipeState, scrollView.contentOffset.x, velocity.x, targetContentOffset->x);
+    HHTrace(@"currentState: %u, scrollView.contentOffset: %f, velocity: %f, targetContentOffset: %f", self.swipeState, scrollView.contentOffset.x, velocity.x, targetContentOffset->x);
+
     switch (self.swipeState) {
         case HHSwipeTableViewCellState_Left:
         {
@@ -321,7 +325,7 @@
                 targetContentOffset->x = [self contentOffsetXForCenter];
                 self.swipeState = HHSwipeTableViewCellState_Center;
             } else {
-                targetContentOffset->x = 0;
+                targetContentOffset->x = [self contentOffsetXForLeft];
             }
             break;
         }
@@ -329,7 +333,7 @@
         {
             if ((targetContentOffset->x < [self contentOffsetXForCenter]) ||
                 (velocity.x == 0 && targetContentOffset->x < [self contentOffsetXForCenter])) {
-                targetContentOffset->x = 0;
+                targetContentOffset->x = [self contentOffsetXForLeft];
                 self.swipeState = HHSwipeTableViewCellState_Left;
             } else if ((targetContentOffset->x > [self contentOffsetXForCenter]) ||
                        (velocity.x == 0 && targetContentOffset->x > [self contentOffsetXForCenter])) {

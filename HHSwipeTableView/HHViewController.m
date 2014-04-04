@@ -71,17 +71,17 @@
 {
     if (state == HHSwipeTableViewCellState_Left) {
         HHSwipeButton* button1 = [HHSwipeButton new];
-        [button1 setTitle:@"No Op" forState:UIControlStateNormal];
+        [button1 setTitle:@"No Op"];
         [button1 setBackgroundColor:[UIColor greenColor]];
         
         HHSwipeButton* button2 = [HHSwipeButton new];
-        [button2 setTitle:@"..." forState:UIControlStateNormal];
+        [button2 setTitle:@"..."];
         [button2 setBackgroundColor:[UIColor purpleColor]];
         
         return @[button1, button2];
     } else {
         HHSwipeButton* button1 = [HHSwipeButton new];
-        [button1 setTitle:@"Delete" forState:UIControlStateNormal];
+        [button1 setTitle:@"Delete"];
         [button1 setBackgroundColor:[UIColor redColor]];
         
         return @[button1];

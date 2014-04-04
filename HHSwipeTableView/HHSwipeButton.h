@@ -9,7 +9,10 @@
 #import <UIKit/UIKit.h>
 #import "HHSwipeTableViewCell.h"
 
-@interface HHSwipeButton : UIButton
+@interface HHSwipeButton : UIView
 @property (nonatomic, assign, readonly) HHSwipeTableViewCellState swipeState; // left or right button
 @property (nonatomic, assign, readonly) NSUInteger indexInContainer; // index of the button in either the left or right container
+@property (nonatomic, strong, readonly) UITapGestureRecognizer *tapGestureRecognizer;
+@property (nonatomic, strong) UIImage *image;
+@property (nonatomic, copy) NSString *title;
 @end
