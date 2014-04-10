@@ -114,7 +114,7 @@
                                                    object: nil];
         
         _singleTapGestureRecognizer = [[HHTapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
-        [_singleTapGestureRecognizer requireGestureRecognizerToFail:self.scrollView.panGestureRecognizer];
+        _singleTapGestureRecognizer.delegate = self;
         [_scrollContentView addGestureRecognizer:_singleTapGestureRecognizer];
         [_scrollContentView setUserInteractionEnabled:YES];
         _swipeState = HHSwipeTableViewCellState_Center;
@@ -122,18 +122,46 @@
     return self;
 }
 
-- (void)dealloc {
+- (void)dealloc
+{
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)setTableView:(UITableView *)tableView
 {
     _tableView = tableView;
-    [self.singleTapGestureRecognizer requireGestureRecognizerToFail:tableView.panGestureRecognizer];
     
     if ([tableView isKindOfClass:[HHSwipeTableView class]]) {
         _swipeTableView = (HHSwipeTableView *)tableView;
     }
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    if (gestureRecognizer == self.singleTapGestureRecognizer) {
+        if (otherGestureRecognizer == self.tableView.panGestureRecognizer) {
+            return YES;
+        } else if (otherGestureRecognizer == self.scrollView.panGestureRecognizer) {
+            return YES;
+        }
+    }
+    
+    return NO;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    if (otherGestureRecognizer == self.scrollView.panGestureRecognizer ||
+        otherGestureRecognizer == self.singleTapGestureRecognizer) {
+        NSArray *allButtons = [self.buttonsOnLeft arrayByAddingObjectsFromArray:self.buttonsOnRight];
+        for (HHSwipeButton *button in allButtons) {
+            if (gestureRecognizer == button.tapGestureRecognizer) {
+                return YES;
+            }
+        }
+    }
+    
+    return NO;
 }
 
 - (void)onOpen:(NSNotification*)notification
@@ -220,8 +248,7 @@
         button.indexInContainer = idx;
         button.swipeState = HHSwipeTableViewCellState_Left;
         [button.tapGestureRecognizer addTarget:self action:@selector(buttonPressed:)];
-        [self.scrollView.panGestureRecognizer requireGestureRecognizerToFail:button.tapGestureRecognizer];
-        [self.singleTapGestureRecognizer requireGestureRecognizerToFail:button.tapGestureRecognizer];
+        button.tapGestureRecognizer.delegate = self;
         [self.leftButtonContainerView addSubview:button];
     }];
     
@@ -234,8 +261,7 @@
         button.indexInContainer = idx;
         button.swipeState = HHSwipeTableViewCellState_Right;
         [button.tapGestureRecognizer addTarget:self action:@selector(buttonPressed:)];
-        [self.scrollView.panGestureRecognizer requireGestureRecognizerToFail:button.tapGestureRecognizer];
-        [self.singleTapGestureRecognizer requireGestureRecognizerToFail:button.tapGestureRecognizer];
+        button.tapGestureRecognizer.delegate = self;
         [self.rightButtonContainerView addSubview:button];
     }];
     

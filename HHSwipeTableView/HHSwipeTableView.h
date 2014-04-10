@@ -18,6 +18,6 @@
 @end
 
 
-@interface HHSwipeTableView:UITableView
+@interface HHSwipeTableView : UITableView
 @property (nonatomic, weak) id<HHSwipeTableViewDelegate> swipeDelegate;
 @end
