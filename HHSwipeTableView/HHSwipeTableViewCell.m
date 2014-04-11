@@ -71,13 +71,19 @@
 {
     switch (swipeState) {
         case HHSwipeTableViewCellState_Left:
-            self.scrollView.contentOffset = CGPointMake([self contentOffsetXForLeft], 0);
+            if (self.scrollView.contentOffset.x != [self contentOffsetXForLeft]) {
+                self.scrollView.contentOffset = CGPointMake([self contentOffsetXForLeft], 0);
+            }
             break;
         case HHSwipeTableViewCellState_Center:
-            self.scrollView.contentOffset = CGPointMake([self contentOffsetXForCenter], 0);
+            if (self.scrollView.contentOffset.x != [self contentOffsetXForCenter]) {
+                self.scrollView.contentOffset = CGPointMake([self contentOffsetXForCenter], 0);
+            }
             break;
         case HHSwipeTableViewCellState_Right:
-            self.scrollView.contentOffset = CGPointMake([self contentOffsetXForRight], 0);
+            if (self.scrollView.contentOffset.x != [self contentOffsetXForRight]) {
+                self.scrollView.contentOffset = CGPointMake([self contentOffsetXForRight], 0);
+            }
             break;
         default:
             NSAssert(NO, @"Invalid swipe state: %u", swipeState);
@@ -312,9 +318,12 @@
     self.rightButtonContainerView.frame = rightFrame;
 }
 
-
 - (void)scrollViewDidScroll:(UIScrollView*)scrollView
 {
+    if (scrollView != self.scrollView) {
+        return;
+    }
+    
     HHTrace(@"currentState: %u, scrollViewDidScroll: scrollView.contentOffset: %f", self.swipeState, scrollView.contentOffset.x);
     
     [self setHighlighted:NO animated:NO];
@@ -341,6 +350,10 @@
                      withVelocity:(CGPoint)velocity
               targetContentOffset:(inout CGPoint*)targetContentOffset
 {
+    if (scrollView != self.scrollView) {
+        return;
+    }
+    
     HHTrace(@"currentState: %u, scrollView.contentOffset: %f, velocity: %f, targetContentOffset: %f", self.swipeState, scrollView.contentOffset.x, velocity.x, targetContentOffset->x);
 
     switch (self.swipeState) {
