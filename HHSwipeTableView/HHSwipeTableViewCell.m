@@ -212,9 +212,10 @@
         [UIView animateWithDuration:0.25
                          animations:^{
                              [self setContentOffsetXForState:swipeState];
+                             self.swipeState = swipeState;
                          }
                          completion:^(BOOL finished) {
-                             self.swipeState = swipeState;
+                             
                          }];
     });
 }
@@ -277,9 +278,10 @@
         HHSwipeTableViewCellState swipeState = [self.swipeTableView.swipeStates[self.swipeId] unsignedIntegerValue];
         if (swipeState == HHSwipeTableViewCellState_None) {
             [self setSwipeState:HHSwipeTableViewCellState_Center animated:NO];
-        } else if (swipeState != self.swipeState) {
+        } else {
             [self setSwipeState:swipeState animated:NO];
         }
+        
     } else {
         [self setSwipeState:HHSwipeTableViewCellState_Center animated:NO];
     }
@@ -450,26 +452,4 @@
     }
 }
 
-// For testing
-//- (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated
-//{
-//    [super setHighlighted:highlighted animated:animated];
-//
-//    if (highlighted) {
-//        self.scrollContentView.backgroundColor = [UIColor redColor];
-//    } else {
-//        self.scrollContentView.backgroundColor = [UIColor yellowColor];
-//    }
-//}
-//
-//- (void)setSelected:(BOOL)selected animated:(BOOL)animated
-//{
-//    [super setSelected:selected animated:animated];
-//    
-//    if (selected) {
-//        self.scrollContentView.backgroundColor = [UIColor blueColor];
-//    } else {
-//        self.scrollContentView.backgroundColor = [UIColor yellowColor];
-//    }
-//}
 @end

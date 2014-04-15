@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2787C35318FD9CFF00247D79 /* HHTestTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2787C35218FD9CFF00247D79 /* HHTestTableViewCell.m */; };
 		27FE216C18E5ED3100BFEEF8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27FE216B18E5ED3100BFEEF8 /* Foundation.framework */; };
 		27FE216E18E5ED3100BFEEF8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27FE216D18E5ED3100BFEEF8 /* CoreGraphics.framework */; };
 		27FE217018E5ED3100BFEEF8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27FE216F18E5ED3100BFEEF8 /* UIKit.framework */; };
@@ -38,6 +39,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2787C35118FD9CFF00247D79 /* HHTestTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HHTestTableViewCell.h; sourceTree = "<group>"; };
+		2787C35218FD9CFF00247D79 /* HHTestTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HHTestTableViewCell.m; sourceTree = "<group>"; };
 		27A1483718E645DC00A93F86 /* HHTrace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HHTrace.h; sourceTree = "<group>"; };
 		27FE216818E5ED3100BFEEF8 /* HHSwipeTableView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HHSwipeTableView.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		27FE216B18E5ED3100BFEEF8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -137,6 +140,8 @@
 				27FE21A118E5ED7400BFEEF8 /* HHSwipeTableViewCell.m */,
 				27FE21A218E5ED7400BFEEF8 /* HHTapGestureRecognizer.h */,
 				27FE21A318E5ED7400BFEEF8 /* HHTapGestureRecognizer.m */,
+				2787C35118FD9CFF00247D79 /* HHTestTableViewCell.h */,
+				2787C35218FD9CFF00247D79 /* HHTestTableViewCell.m */,
 				27FE21A918E5EDCC00BFEEF8 /* HHViewController.h */,
 				27FE21AA18E5EDCC00BFEEF8 /* HHViewController.m */,
 				27FE217A18E5ED3100BFEEF8 /* AppDelegate.h */,
@@ -274,6 +279,7 @@
 				27FE21A818E5ED7400BFEEF8 /* HHTapGestureRecognizer.m in Sources */,
 				27FE21A418E5ED7400BFEEF8 /* HHScrollView.m in Sources */,
 				27FE217C18E5ED3100BFEEF8 /* AppDelegate.m in Sources */,
+				2787C35318FD9CFF00247D79 /* HHTestTableViewCell.m in Sources */,
 				27FE21A718E5ED7400BFEEF8 /* HHSwipeTableViewCell.m in Sources */,
 				27FE21AB18E5EDCC00BFEEF8 /* HHViewController.m in Sources */,
 				27FE21A518E5ED7400BFEEF8 /* HHSwipeButton.m in Sources */,

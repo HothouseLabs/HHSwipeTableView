@@ -11,6 +11,7 @@
 #import "HHSwipeTableView.h"
 #import "HHSwipeButton.h"
 #import "HHTapGestureRecognizer.h"
+#import "HHTestTableViewCell.h"
 
 @interface HHViewController ()
 @property (nonatomic, strong) NSMutableArray* cellContent;
@@ -25,7 +26,7 @@
         HHSwipeTableView* tableView = [[HHSwipeTableView alloc] initWithFrame:self.view.bounds
                                                                 style:UITableViewStylePlain];
         tableView.swipeDelegate = self;
-        [tableView registerClass:[HHSwipeTableViewCell class] forCellReuseIdentifier:@"Cell"];
+        [tableView registerClass:[HHTestTableViewCell class] forCellReuseIdentifier:@"Cell"];
         self.tableView = tableView;
     }
     return self;
@@ -43,27 +44,20 @@
 
 - (void)reloadTable:(id)sender
 {
-    [self.tableView reloadData];
+    // [self.tableView reloadData];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self.cellContent insertObject:[NSString stringWithFormat:@"Content %lu", ((unsigned long)self.cellContent.count + 1)] atIndex:0];
+        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationNone];
+        [self reloadTable:nil];
+    });
 }
 
 - (void)loadTestMessages
 {
     self.cellContent = [NSMutableArray array];
     for (NSUInteger i = 0; i < 50; i++) {
-        [self.cellContent addObject:[NSString stringWithFormat:@"Content %lu", (unsigned long)i]];
+        [self.cellContent addObject:[NSString stringWithFormat:@"Content %lu", (unsigned long)50 - i]];
     }
-    
-    // Call reload table repetitively to test for resilience of the table view cell states
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        while (YES) {
-            HHTrace(@"<============  reload data ==============>");
-            usleep(1000000); // Adjust this value to test resilience
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self.tableView reloadData];
-            });
-            break;
-        }
-    });
 }
 
 #pragma mark - Table View
@@ -128,8 +122,9 @@
 
 - (UITableViewCell *) tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath
 {
-    HHSwipeTableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
-    cell.swipeId = @(indexPath.row);
+    HHTestTableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
+    cell.swipeId = self.cellContent[indexPath.row];
+    cell.label.text = self.cellContent[indexPath.row];
     cell.scrollContentView.backgroundColor = [UIColor yellowColor];
     
     // Add a double tap gesture recognizer for testing
