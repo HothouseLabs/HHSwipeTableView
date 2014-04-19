@@ -151,7 +151,6 @@
             return YES;
         }
     }
-    
     return NO;
 }
 
@@ -159,7 +158,15 @@
 {
     if (otherGestureRecognizer == self.scrollView.panGestureRecognizer ||
         otherGestureRecognizer == self.singleTapGestureRecognizer) {
-        NSArray *allButtons = [self.buttonsOnLeft arrayByAddingObjectsFromArray:self.buttonsOnRight];
+        NSMutableArray *allButtons = [NSMutableArray array];
+        if (self.buttonsOnLeft) {
+            [allButtons addObjectsFromArray:self.buttonsOnLeft];
+        }
+        
+        if (self.buttonsOnRight) {
+            [allButtons addObjectsFromArray:self.buttonsOnRight];
+        }
+        
         for (HHSwipeButton *button in allButtons) {
             if (gestureRecognizer == button.tapGestureRecognizer) {
                 return YES;
