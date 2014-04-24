@@ -124,6 +124,11 @@
         [_scrollContentView addGestureRecognizer:_singleTapGestureRecognizer];
         [_scrollContentView setUserInteractionEnabled:YES];
         _swipeState = HHSwipeTableViewCellState_Center;
+        
+        // Note: workaround for iOS7. If this is not set the cell's separator mysteriously disappear
+        // and scrollContentView and some other views turns transparent.
+        // Subclasses can overwrite this behavior
+        self.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     return self;
 }
@@ -457,6 +462,11 @@
             }
         }
     }
+}
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated
+{
+    [super setSelected:selected animated:animated];
 }
 
 @end
