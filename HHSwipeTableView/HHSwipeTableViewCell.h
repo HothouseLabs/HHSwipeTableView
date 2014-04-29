@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-@class HHScrollView, HHTapGestureRecognizer;
+@class HHTapGestureRecognizer, HHSwipeTableViewCellScrollView;
 
 static NSString* HHSwipeTableViewCellDidOpenNotification = @"HHSwipeTableViewCellDidOpenNotification";
 static NSString* HHSwipeTableViewCellNeedsToCloseNotification = @"HHSwipeTableViewCellNeedsToCloseNotification";
@@ -21,7 +21,7 @@ typedef NS_ENUM(NSUInteger, HHSwipeTableViewCellState) {
 
 @interface HHSwipeTableViewCell : UITableViewCell
 @property (nonatomic, weak) UITableView * tableView;
-@property (nonatomic, strong, readonly) UIScrollView * scrollView;
+@property (nonatomic, strong, readonly) HHSwipeTableViewCellScrollView * scrollView;
 @property (nonatomic, strong, readonly) UIView * scrollContentView;
 @property (nonatomic, strong) id swipeId; // This helps the table view to identify the swipe state of the object so on reloadData the correct state can be recovered
 @property (nonatomic, assign) HHSwipeTableViewCellState swipeState;

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		27061078190FF5D50067D2CD /* HHSwipeTableViewCellScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 27061077190FF5D50067D2CD /* HHSwipeTableViewCellScrollView.m */; };
 		2787C35318FD9CFF00247D79 /* HHTestTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2787C35218FD9CFF00247D79 /* HHTestTableViewCell.m */; };
 		27FE216C18E5ED3100BFEEF8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27FE216B18E5ED3100BFEEF8 /* Foundation.framework */; };
 		27FE216E18E5ED3100BFEEF8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27FE216D18E5ED3100BFEEF8 /* CoreGraphics.framework */; };
@@ -20,7 +21,6 @@
 		27FE218718E5ED3100BFEEF8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27FE216F18E5ED3100BFEEF8 /* UIKit.framework */; };
 		27FE218F18E5ED3100BFEEF8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 27FE218D18E5ED3100BFEEF8 /* InfoPlist.strings */; };
 		27FE219118E5ED3100BFEEF8 /* HHSwipeTableViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 27FE219018E5ED3100BFEEF8 /* HHSwipeTableViewTests.m */; };
-		27FE21A418E5ED7400BFEEF8 /* HHScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 27FE219B18E5ED7400BFEEF8 /* HHScrollView.m */; };
 		27FE21A518E5ED7400BFEEF8 /* HHSwipeButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 27FE219D18E5ED7400BFEEF8 /* HHSwipeButton.m */; };
 		27FE21A618E5ED7400BFEEF8 /* HHSwipeTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 27FE219F18E5ED7400BFEEF8 /* HHSwipeTableView.m */; };
 		27FE21A718E5ED7400BFEEF8 /* HHSwipeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 27FE21A118E5ED7400BFEEF8 /* HHSwipeTableViewCell.m */; };
@@ -39,6 +39,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		27061076190FF5D50067D2CD /* HHSwipeTableViewCellScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HHSwipeTableViewCellScrollView.h; sourceTree = "<group>"; };
+		27061077190FF5D50067D2CD /* HHSwipeTableViewCellScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HHSwipeTableViewCellScrollView.m; sourceTree = "<group>"; };
 		2787C35118FD9CFF00247D79 /* HHTestTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HHTestTableViewCell.h; sourceTree = "<group>"; };
 		2787C35218FD9CFF00247D79 /* HHTestTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HHTestTableViewCell.m; sourceTree = "<group>"; };
 		27A1483718E645DC00A93F86 /* HHTrace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HHTrace.h; sourceTree = "<group>"; };
@@ -58,8 +60,6 @@
 		27FE218C18E5ED3100BFEEF8 /* HHSwipeTableViewTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "HHSwipeTableViewTests-Info.plist"; sourceTree = "<group>"; };
 		27FE218E18E5ED3100BFEEF8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		27FE219018E5ED3100BFEEF8 /* HHSwipeTableViewTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HHSwipeTableViewTests.m; sourceTree = "<group>"; };
-		27FE219A18E5ED7400BFEEF8 /* HHScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HHScrollView.h; sourceTree = "<group>"; };
-		27FE219B18E5ED7400BFEEF8 /* HHScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HHScrollView.m; sourceTree = "<group>"; };
 		27FE219C18E5ED7400BFEEF8 /* HHSwipeButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HHSwipeButton.h; sourceTree = "<group>"; };
 		27FE219D18E5ED7400BFEEF8 /* HHSwipeButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HHSwipeButton.m; sourceTree = "<group>"; };
 		27FE219E18E5ED7400BFEEF8 /* HHSwipeTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HHSwipeTableView.h; sourceTree = "<group>"; };
@@ -130,14 +130,14 @@
 			isa = PBXGroup;
 			children = (
 				27A1483718E645DC00A93F86 /* HHTrace.h */,
-				27FE219A18E5ED7400BFEEF8 /* HHScrollView.h */,
-				27FE219B18E5ED7400BFEEF8 /* HHScrollView.m */,
 				27FE219C18E5ED7400BFEEF8 /* HHSwipeButton.h */,
 				27FE219D18E5ED7400BFEEF8 /* HHSwipeButton.m */,
 				27FE219E18E5ED7400BFEEF8 /* HHSwipeTableView.h */,
 				27FE219F18E5ED7400BFEEF8 /* HHSwipeTableView.m */,
 				27FE21A018E5ED7400BFEEF8 /* HHSwipeTableViewCell.h */,
 				27FE21A118E5ED7400BFEEF8 /* HHSwipeTableViewCell.m */,
+				27061076190FF5D50067D2CD /* HHSwipeTableViewCellScrollView.h */,
+				27061077190FF5D50067D2CD /* HHSwipeTableViewCellScrollView.m */,
 				27FE21A218E5ED7400BFEEF8 /* HHTapGestureRecognizer.h */,
 				27FE21A318E5ED7400BFEEF8 /* HHTapGestureRecognizer.m */,
 				2787C35118FD9CFF00247D79 /* HHTestTableViewCell.h */,
@@ -276,8 +276,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27061078190FF5D50067D2CD /* HHSwipeTableViewCellScrollView.m in Sources */,
 				27FE21A818E5ED7400BFEEF8 /* HHTapGestureRecognizer.m in Sources */,
-				27FE21A418E5ED7400BFEEF8 /* HHScrollView.m in Sources */,
 				27FE217C18E5ED3100BFEEF8 /* AppDelegate.m in Sources */,
 				2787C35318FD9CFF00247D79 /* HHTestTableViewCell.m in Sources */,
 				27FE21A718E5ED7400BFEEF8 /* HHSwipeTableViewCell.m in Sources */,

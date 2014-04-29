@@ -8,7 +8,7 @@
 
 #import "HHSwipeTableViewCell.h"
 #import "HHSwipeTableView.h"
-// #import "HHScrollView.h"
+#import "HHSwipeTableViewCellScrollView.h"
 #import "HHTapGestureRecognizer.h"
 #import "HHSwipeButton.h"
 
@@ -30,7 +30,7 @@
 
 @property (nonatomic, assign, readonly) NSUInteger numberOfButtonsOnLeft;
 @property (nonatomic, assign, readonly) NSUInteger numberOfButtonsOnRight;
-@property (nonatomic, strong) UIScrollView * scrollView;
+@property (nonatomic, strong) HHSwipeTableViewCellScrollView * scrollView;
 @property (nonatomic, strong) UIView * scrollContentView;
 @property (nonatomic, strong) UIView * rightButtonContainerView;
 @property (nonatomic, strong) UIView * leftButtonContainerView;
@@ -95,7 +95,7 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        self.scrollView = [[UIScrollView alloc] init];
+        self.scrollView = [HHSwipeTableViewCellScrollView new];
         self.scrollView.showsHorizontalScrollIndicator = NO;
         self.scrollView.showsVerticalScrollIndicator = NO;
         self.scrollView.bounces = YES;
@@ -105,8 +105,9 @@
         
         [self.contentView addSubview:self.scrollView];
         
-        self.scrollContentView = [[UIView alloc] init];
+        self.scrollContentView = [UIView new];
         
+        self.scrollView.scrollContentView = self.scrollContentView;
         [self.scrollView addSubview:self.scrollContentView];
         
         [[NSNotificationCenter defaultCenter] addObserver: self
