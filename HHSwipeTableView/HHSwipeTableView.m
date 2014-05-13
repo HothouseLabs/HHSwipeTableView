@@ -40,6 +40,12 @@
     }
 }
 
+- (id)dequeueReusableCellWithIdentifier:(NSString*)identifier
+{
+    NSAssert(NO, @"Not supported currently. Use dequeueReusableCellWithIdentifier:forIndexPath");
+    return nil;
+}
+
 - (id)dequeueReusableCellWithIdentifier:(NSString*)identifier forIndexPath:(NSIndexPath*)indexPath
 {
     HHSwipeTableViewCell* cell = (HHSwipeTableViewCell*)[super dequeueReusableCellWithIdentifier:identifier];
