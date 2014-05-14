@@ -60,4 +60,46 @@
     cell.buttonWidth = [self.swipeDelegate swipeTableViewButtonWidth:self];
     return cell;
 }
+
+- (void)resetVisibleCellsAnimated:(BOOL)animated
+{
+    NSArray *visibleCells = [self visibleCells];
+    for (UITableViewCell *cell in visibleCells) {
+        if (![cell isKindOfClass:[HHSwipeTableViewCell class]]) {
+            return;
+        }
+        
+        HHSwipeTableViewCell *swipeCell = (HHSwipeTableViewCell *)cell;
+        [swipeCell setSwipeState:HHSwipeTableViewCellState_Center animated:animated];
+    }
+}
+
+- (HHSwipeButton *)buttonAtIndex:(NSUInteger)index inState:(HHSwipeTableViewCellState)state forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell = [self cellForRowAtIndexPath:indexPath];
+    if (!cell) {
+        return nil; // Cell is not visible
+    }
+    
+    if (![cell isKindOfClass:[HHSwipeTableViewCell class]]) {
+        return nil; // There is no button
+    }
+    
+    HHSwipeTableViewCell *swipeCell = (HHSwipeTableViewCell *)cell;
+    if (state == HHSwipeTableViewCellState_Left) {
+        if (index >= swipeCell.buttonsOnLeft.count) {
+            return nil;
+        }
+        
+        return swipeCell.buttonsOnLeft[index];
+    } else if (state == HHSwipeTableViewCellState_Right) {
+        if (index >= swipeCell.buttonsOnRight.count) {
+            return nil;
+        }
+        
+        return swipeCell.buttonsOnRight[index];
+    } else {
+        return nil;
+    }
+}
 @end

@@ -307,7 +307,7 @@
     HHSwipeButton *button = (HHSwipeButton *)tapGestureRecognizer.view;
     
     NSIndexPath *indexPath = [self.tableView indexPathForCell:self];
-    [self.swipeTableView.swipeDelegate swipeTableView:self.swipeTableView didTapButtonAtIndex:button.indexInContainer inState:button.swipeState forRowAtIndexPath:indexPath];
+    [self.swipeTableView.swipeDelegate swipeTableView:self.swipeTableView didTapButton:button atIndex:button.indexInContainer inState:button.swipeState forRowAtIndexPath:indexPath];
 }
 
 #pragma mark - UIScrollViewDelegate
