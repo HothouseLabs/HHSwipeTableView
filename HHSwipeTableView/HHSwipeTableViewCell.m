@@ -136,6 +136,7 @@
 
 - (void)dealloc
 {
+    self.singleTapGestureRecognizer.delegate = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
