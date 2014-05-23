@@ -66,7 +66,7 @@
     NSArray *visibleCells = [self visibleCells];
     for (UITableViewCell *cell in visibleCells) {
         if (![cell isKindOfClass:[HHSwipeTableViewCell class]]) {
-            return;
+            continue;
         }
         
         HHSwipeTableViewCell *swipeCell = (HHSwipeTableViewCell *)cell;
