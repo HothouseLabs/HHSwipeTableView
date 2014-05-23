@@ -136,6 +136,7 @@
 
 - (void)dealloc
 {
+    self.singleTapGestureRecognizer.delegate = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -307,7 +308,9 @@
     HHSwipeButton *button = (HHSwipeButton *)tapGestureRecognizer.view;
     
     NSIndexPath *indexPath = [self.tableView indexPathForCell:self];
-    [self.swipeTableView.swipeDelegate swipeTableView:self.swipeTableView didTapButton:button atIndex:button.indexInContainer inState:button.swipeState forRowAtIndexPath:indexPath];
+    if (indexPath != nil) { // this can happen if the cell is no longer visible by the time we get here (rare)
+        [self.swipeTableView.swipeDelegate swipeTableView:self.swipeTableView didTapButton:button atIndex:button.indexInContainer inState:button.swipeState forRowAtIndexPath:indexPath];
+    }
 }
 
 #pragma mark - UIScrollViewDelegate
