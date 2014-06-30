@@ -11,6 +11,7 @@
 #import "HHSwipeTableViewCellScrollView.h"
 #import "HHTapGestureRecognizer.h"
 #import "HHSwipeButton.h"
+#import "HHLog.h"
 
 @interface HHSwipeButton(Private)
 @property (nonatomic, assign) HHSwipeTableViewCellState swipeState;
@@ -37,7 +38,9 @@
 @property (nonatomic, strong) UIButton * moreButton;
 @property (nonatomic, strong) UIButton * deleteButton;
 @property (nonatomic, strong) UIButton * leftButton;
-@property (nonatomic, strong) HHTapGestureRecognizer *singleTapGestureRecognizer;
+@property (nonatomic, strong) HHTapGestureRecognizer * singleTapGestureRecognizer;
+@property (nonatomic, strong) UILongPressGestureRecognizer * longPressGestureRecognizer;
+
 @end
 
 @implementation HHSwipeTableViewCell
@@ -120,9 +123,16 @@
                                                      name: HHSwipeTableViewCellNeedsToCloseNotification
                                                    object: nil];
         
+        _longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressController:)];
+        _longPressGestureRecognizer.delegate = self;
+        [_scrollContentView addGestureRecognizer:_longPressGestureRecognizer];
+        
         _singleTapGestureRecognizer = [[HHTapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
         _singleTapGestureRecognizer.delegate = self;
         [_scrollContentView addGestureRecognizer:_singleTapGestureRecognizer];
+        //  For tap to be a tap long press has to fail.
+        [_singleTapGestureRecognizer requireGestureRecognizerToFail:_longPressGestureRecognizer];
+        
         [_scrollContentView setUserInteractionEnabled:YES];
         _swipeState = HHSwipeTableViewCellState_Center;
         
@@ -137,6 +147,7 @@
 - (void)dealloc
 {
     self.singleTapGestureRecognizer.delegate = nil;
+    self.longPressGestureRecognizer.delegate = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -158,6 +169,7 @@
             return YES;
         }
     }
+    
     return NO;
 }
 
@@ -471,6 +483,11 @@
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
     [super setSelected:selected animated:animated];
+}
+
+-(void) longPressController: (UILongPressGestureRecognizer*)gesture
+{
+    //  TODO: Now react to long press.
 }
 
 @end
