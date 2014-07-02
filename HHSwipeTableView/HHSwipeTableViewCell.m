@@ -39,7 +39,6 @@
 @property (nonatomic, strong) UIButton * deleteButton;
 @property (nonatomic, strong) UIButton * leftButton;
 @property (nonatomic, strong) HHTapGestureRecognizer * singleTapGestureRecognizer;
-@property (nonatomic, strong) UILongPressGestureRecognizer * longPressGestureRecognizer;
 
 @end
 
@@ -123,15 +122,9 @@
                                                      name: HHSwipeTableViewCellNeedsToCloseNotification
                                                    object: nil];
         
-        _longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressController:)];
-        _longPressGestureRecognizer.delegate = self;
-        [_scrollContentView addGestureRecognizer:_longPressGestureRecognizer];
-        
         _singleTapGestureRecognizer = [[HHTapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
         _singleTapGestureRecognizer.delegate = self;
         [_scrollContentView addGestureRecognizer:_singleTapGestureRecognizer];
-        //  For tap to be a tap long press has to fail.
-        [_singleTapGestureRecognizer requireGestureRecognizerToFail:_longPressGestureRecognizer];
         
         [_scrollContentView setUserInteractionEnabled:YES];
         _swipeState = HHSwipeTableViewCellState_Center;
@@ -147,7 +140,6 @@
 - (void)dealloc
 {
     self.singleTapGestureRecognizer.delegate = nil;
-    self.longPressGestureRecognizer.delegate = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -485,14 +477,6 @@
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
     [super setSelected:selected animated:animated];
-}
-
-- (void)longPressController:(UILongPressGestureRecognizer*)gesture
-{
-    if(self.swipeTableView)
-    {
-        [self.swipeTableView tableViewDidLongPressCell:self];
-    }
 }
 
 - (void)setIsInSelectionMode:(BOOL)isInSelectionMode
