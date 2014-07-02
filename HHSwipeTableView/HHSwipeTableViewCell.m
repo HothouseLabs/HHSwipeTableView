@@ -157,6 +157,8 @@
     
     if ([tableView isKindOfClass:[HHSwipeTableView class]]) {
         _swipeTableView = (HHSwipeTableView *)tableView;
+    } else {
+        _swipeTableView = nil;
     }
 }
 
@@ -485,9 +487,26 @@
     [super setSelected:selected animated:animated];
 }
 
--(void) longPressController: (UILongPressGestureRecognizer*)gesture
+- (void)longPressController:(UILongPressGestureRecognizer*)gesture
 {
-    //  TODO: Now react to long press.
+    if(self.swipeTableView)
+    {
+        [self.swipeTableView tableViewDidLongPressCell:self];
+    }
+}
+
+- (void)setIsInSelectionMode:(BOOL)isInSelectionMode
+{
+    _isInSelectionMode = isInSelectionMode;
+    
+    //  Scrolling (swiping the cell left and right) is disabled
+    //  when in selection mode.
+    self.scrollView.scrollEnabled = !isInSelectionMode;
+    
+    //  When coming into selection mode animate the cell to its non-swiped state.
+    if (isInSelectionMode && self.swipeState != HHSwipeTableViewCellState_None) {
+        [self setSwipeState:HHSwipeTableViewCellState_None];
+    }
 }
 
 @end
