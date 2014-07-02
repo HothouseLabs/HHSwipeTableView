@@ -22,6 +22,7 @@ typedef NS_ENUM(NSUInteger, HHSwipeTableViewCellState) {
 @interface HHSwipeTableViewCell : UITableViewCell
 
 @property (nonatomic, weak) UITableView * tableView;
+@property (nonatomic, weak, readonly) HHSwipeTableView * swipeTableView;
 
 @property (nonatomic, strong, readonly) HHSwipeTableViewCellScrollView * scrollView;
 @property (nonatomic, strong, readonly) UIView * scrollContentView;
@@ -29,8 +30,7 @@ typedef NS_ENUM(NSUInteger, HHSwipeTableViewCellState) {
 @property (nonatomic, assign) HHSwipeTableViewCellState swipeState;
 @property (nonatomic, strong, readonly) HHTapGestureRecognizer * singleTapGestureRecognizer;
 
-//  Cells behave and render differently when in selection mode.
-@property (nonatomic, assign) BOOL isInSelectionMode;
+@property (nonatomic, assign) BOOL swipeDisabled;
 
 - (void)setSwipeState:(HHSwipeTableViewCellState)swipeState animated:(BOOL)animated;
 

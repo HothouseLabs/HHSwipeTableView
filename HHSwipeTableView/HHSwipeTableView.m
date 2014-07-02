@@ -103,11 +103,4 @@
     }
 }
 
-- (void)tableViewDidLongPressCell:(HHSwipeTableViewCell*)cell
-{
-    if(self.swipeDelegate) {
-        [self.swipeDelegate tableView:self didLongPressCell:cell];
-    }
-}
-
 @end

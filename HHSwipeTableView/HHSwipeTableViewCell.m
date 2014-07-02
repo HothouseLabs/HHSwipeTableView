@@ -479,16 +479,15 @@
     [super setSelected:selected animated:animated];
 }
 
-- (void)setIsInSelectionMode:(BOOL)isInSelectionMode
+- (void)setSwipeDisabled:(BOOL)swipeDisabled
 {
-    _isInSelectionMode = isInSelectionMode;
+    _swipeDisabled = swipeDisabled;
     
-    //  Scrolling (swiping the cell left and right) is disabled
-    //  when in selection mode.
-    self.scrollView.scrollEnabled = !isInSelectionMode;
+    //  The swiping left/right is implemented as scrolling.
+    self.scrollView.scrollEnabled = !_swipeDisabled;
     
-    //  When coming into selection mode animate the cell to its non-swiped state.
-    if (isInSelectionMode && self.swipeState != HHSwipeTableViewCellState_None) {
+    //  When switching into swipe disabled mode animate the cell to its non-swiped state.
+    if (_swipeDisabled && self.swipeState != HHSwipeTableViewCellState_None) {
         [self setSwipeState:HHSwipeTableViewCellState_None];
     }
 }

@@ -15,14 +15,10 @@
 - (NSArray *)swipeTableView:(HHSwipeTableView *)swipeTableView buttonsInState:(HHSwipeTableViewCellState)state forRowAtIndexPath:(NSIndexPath *)indexPath;
 - (CGFloat)swipeTableViewButtonWidth:(HHSwipeTableView *)swipeTableView;
 - (void)swipeTableView:(HHSwipeTableView *)swipeTableView didTapButton:(HHSwipeButton *)button atIndex:(NSUInteger)index inState:(HHSwipeTableViewCellState)state forRowAtIndexPath:(NSIndexPath *)indexPath;
-
-@optional
-- (void)tableView:(HHSwipeTableView*)swipeTableView didLongPressCell:(HHSwipeTableViewCell*)cell;
 @end
 
 @interface HHSwipeTableView : UITableView
 @property (nonatomic, weak) id<HHSwipeTableViewDelegate> swipeDelegate;
 - (void)resetVisibleCellsAnimated:(BOOL)animated;
 - (HHSwipeButton *)buttonAtIndex:(NSUInteger)index inState:(HHSwipeTableViewCellState)state forRowAtIndexPath:(NSIndexPath *)indexPath;
-- (void)tableViewDidLongPressCell:(HHSwipeTableViewCell*)cell;
 @end
