@@ -11,6 +11,7 @@
 #import "HHSwipeTableViewCellScrollView.h"
 #import "HHTapGestureRecognizer.h"
 #import "HHSwipeButton.h"
+#import "HHLog.h"
 
 @interface HHSwipeButton(Private)
 @property (nonatomic, assign) HHSwipeTableViewCellState swipeState;
@@ -37,7 +38,8 @@
 @property (nonatomic, strong) UIButton * moreButton;
 @property (nonatomic, strong) UIButton * deleteButton;
 @property (nonatomic, strong) UIButton * leftButton;
-@property (nonatomic, strong) HHTapGestureRecognizer *singleTapGestureRecognizer;
+@property (nonatomic, strong) HHTapGestureRecognizer * singleTapGestureRecognizer;
+
 @end
 
 @implementation HHSwipeTableViewCell
@@ -123,6 +125,7 @@
         _singleTapGestureRecognizer = [[HHTapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
         _singleTapGestureRecognizer.delegate = self;
         [_scrollContentView addGestureRecognizer:_singleTapGestureRecognizer];
+        
         [_scrollContentView setUserInteractionEnabled:YES];
         _swipeState = HHSwipeTableViewCellState_Center;
         
@@ -146,6 +149,8 @@
     
     if ([tableView isKindOfClass:[HHSwipeTableView class]]) {
         _swipeTableView = (HHSwipeTableView *)tableView;
+    } else {
+        _swipeTableView = nil;
     }
 }
 
@@ -158,6 +163,7 @@
             return YES;
         }
     }
+    
     return NO;
 }
 
@@ -471,6 +477,19 @@
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
     [super setSelected:selected animated:animated];
+}
+
+- (void)setSwipeDisabled:(BOOL)swipeDisabled
+{
+    _swipeDisabled = swipeDisabled;
+    
+    //  The swiping left/right is implemented as scrolling.
+    self.scrollView.scrollEnabled = !_swipeDisabled;
+    
+    //  When switching into swipe disabled mode animate the cell to its non-swiped state.
+    if (_swipeDisabled && self.swipeState != HHSwipeTableViewCellState_None) {
+        [self setSwipeState:HHSwipeTableViewCellState_None];
+    }
 }
 
 @end

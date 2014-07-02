@@ -17,7 +17,6 @@
 - (void)swipeTableView:(HHSwipeTableView *)swipeTableView didTapButton:(HHSwipeButton *)button atIndex:(NSUInteger)index inState:(HHSwipeTableViewCellState)state forRowAtIndexPath:(NSIndexPath *)indexPath;
 @end
 
-
 @interface HHSwipeTableView : UITableView
 @property (nonatomic, weak) id<HHSwipeTableViewDelegate> swipeDelegate;
 - (void)resetVisibleCellsAnimated:(BOOL)animated;
