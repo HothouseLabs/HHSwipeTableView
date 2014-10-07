@@ -8,6 +8,7 @@
 
 #import "HHSwipeTableView.h"
 #import "HHSwipeTableViewCell.h"
+#import "HHSwipeTableViewCellScrollView.h"
 
 @interface HHSwipeTableViewCell (Private)
 @property (nonatomic, weak) HHSwipeTableView * tableView;
@@ -27,6 +28,7 @@
     self = [super initWithFrame:frame style:style];
     if (self) {
         _swipeStates = [NSMutableDictionary dictionary];
+        _swipeEnabled = YES;
     }
     return self;
 }
@@ -58,6 +60,7 @@
     cell.buttonsOnLeft = [self.swipeDelegate swipeTableView:self buttonsInState:HHSwipeTableViewCellState_Left forRowAtIndexPath:indexPath];
     cell.buttonsOnRight = [self.swipeDelegate swipeTableView:self buttonsInState:HHSwipeTableViewCellState_Right forRowAtIndexPath:indexPath];
     cell.buttonWidth = [self.swipeDelegate swipeTableViewButtonWidth:self];
+    cell.scrollView.scrollEnabled = self.swipeEnabled;
     return cell;
 }
 
@@ -101,6 +104,22 @@
     } else {
         return nil;
     }
+}
+
+- (void)setSwipeEnabled:(BOOL)swipeEnabled
+{
+    _swipeEnabled = swipeEnabled;
+
+    NSArray *visibleCells = [self visibleCells];
+    for (UITableViewCell *cell in visibleCells) {
+        if (![cell isKindOfClass:[HHSwipeTableViewCell class]]) {
+            continue;
+        }
+        
+        HHSwipeTableViewCell *swipeCell = (HHSwipeTableViewCell *)cell;
+        swipeCell.scrollView.scrollEnabled = swipeEnabled;
+    }
+
 }
 
 @end

@@ -19,6 +19,7 @@
 
 @interface HHSwipeTableView : UITableView
 @property (nonatomic, weak) id<HHSwipeTableViewDelegate> swipeDelegate;
+@property (nonatomic, assign) BOOL swipeEnabled;
 - (void)resetVisibleCellsAnimated:(BOOL)animated;
 - (HHSwipeButton *)buttonAtIndex:(NSUInteger)index inState:(HHSwipeTableViewCellState)state forRowAtIndexPath:(NSIndexPath *)indexPath;
 @end

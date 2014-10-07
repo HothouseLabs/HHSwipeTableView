@@ -30,8 +30,6 @@ typedef NS_ENUM(NSUInteger, HHSwipeTableViewCellState) {
 @property (nonatomic, assign) HHSwipeTableViewCellState swipeState;
 @property (nonatomic, strong, readonly) HHTapGestureRecognizer * singleTapGestureRecognizer;
 
-@property (nonatomic, assign) BOOL swipeDisabled;
-
 - (void)setSwipeState:(HHSwipeTableViewCellState)swipeState animated:(BOOL)animated;
 
 @end
