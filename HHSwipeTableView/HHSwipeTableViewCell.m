@@ -28,6 +28,7 @@
 @property (nonatomic, strong) NSArray* buttonsOnLeft;
 @property (nonatomic, strong) NSArray* buttonsOnRight;
 @property (nonatomic, assign) CGFloat buttonWidth;
+@property (nonatomic, assign) BOOL subviewsBelowScrollViewLaidOut;
 
 @property (nonatomic, assign, readonly) NSUInteger numberOfButtonsOnLeft;
 @property (nonatomic, assign, readonly) NSUInteger numberOfButtonsOnRight;
@@ -243,57 +244,26 @@
 - (void)prepareForReuse
 {
     [super prepareForReuse];
-    
 }
 
 - (void)layoutSubviews
 {
     [super layoutSubviews];
     
+    //  Reset the flag as the subviews beneath the scroll view will need to be laid out again.
+    self.subviewsBelowScrollViewLaidOut = NO;
+    
     [self.leftButtonContainerView removeFromSuperview];
     [self.rightButtonContainerView removeFromSuperview];self.leftButtonContainerView = [[UIView alloc] initWithFrame:CGRectZero];
     self.rightButtonContainerView = [[UIView alloc] initWithFrame:CGRectZero];
-    
-    // Inserting the button container views as siblings of the scroll view
-    // will prevent the tap events on the button being disabled.
-    // See setButtonFrameWithContentOffsetX on adjusting the button position
-    // for an illustion of the swipe.
-    [self.scrollView insertSubview:self.leftButtonContainerView belowSubview:self.scrollContentView];
-    
-    [self.scrollView insertSubview:self.rightButtonContainerView belowSubview:self.scrollContentView];
     
     self.contentView.frame = self.bounds;
     self.scrollView.frame = self.contentView.frame;
     self.scrollView.contentSize = CGSizeMake(self.contentView.frame.size.width + [self contentOffsetXForRight], self.scrollView.frame.size.height);
     self.scrollContentView.frame = CGRectMake([self contentOffsetXForCenter], 0, self.scrollView.frame.size.width, self.scrollView.frame.size.height);
-    
-    CGFloat buttonHeight = self.frame.size.height; // use the cell height as the button width and height
-    [self.buttonsOnLeft enumerateObjectsUsingBlock:^(HHSwipeButton *button, NSUInteger idx, BOOL* stop) {
-        NSAssert([button isKindOfClass:[HHSwipeButton class]], @"Button should be of class HHSwipeButton");
-        
-        button.frame = CGRectMake(idx * self.buttonWidth, 0, self.buttonWidth, buttonHeight);
-        button.indexInContainer = idx;
-        button.swipeState = HHSwipeTableViewCellState_Left;
-        [button.tapGestureRecognizer addTarget:self action:@selector(buttonPressed:)];
-        button.tapGestureRecognizer.delegate = self;
-        [self.leftButtonContainerView addSubview:button];
-    }];
-    
-    self.leftButtonContainerView.frame = CGRectMake(0, 0, self.buttonsOnLeft.count * self.buttonWidth, buttonHeight);
-    
-    [self.buttonsOnRight enumerateObjectsUsingBlock:^(HHSwipeButton *button, NSUInteger idx, BOOL* stop) {
-        NSAssert([button isKindOfClass:[HHSwipeButton class]], @"Button should be of class HHSwipeButton");
-        
-        button.frame = CGRectMake(idx * self.buttonWidth, 0, self.buttonWidth, buttonHeight);
-        button.indexInContainer = idx;
-        button.swipeState = HHSwipeTableViewCellState_Right;
-        [button.tapGestureRecognizer addTarget:self action:@selector(buttonPressed:)];
-        button.tapGestureRecognizer.delegate = self;
-        [self.rightButtonContainerView addSubview:button];
-    }];
-    
-    self.rightButtonContainerView.frame = CGRectMake(self.frame.size.width - self.buttonsOnRight.count * self.buttonWidth, 0, self.buttonsOnRight.count * self.buttonWidth, buttonHeight);
-    
+
+    //  Ensure that cell doesn't appear as swiped (and there is nothing underneath it yet anyway)
+    //  See comments on STIT-4870 below for more info.
     if (self.swipeId) {
         HHSwipeTableViewCellState swipeState = [self.swipeTableView.swipeStates[self.swipeId] unsignedIntegerValue];
         if (swipeState == HHSwipeTableViewCellState_None) {
@@ -340,6 +310,52 @@
     rightFrame.origin.x = self.scrollContentView.frame.size.width - rightFrame.size.width + x;
     HHTrace(@"Right frame: %f", rightFrame.origin.x);
     self.rightButtonContainerView.frame = rightFrame;
+}
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    //  STIT-4870: Profiling shows that the inbox scrolling bottleneck is setup of the
+    //      horizontal scroll view that isn't even visible during the vertical (inbox)
+    //      scrolling. Thus we layout the buttons beneath the horizontal scroll view
+    //      only once the said scroll view begins dragging.
+
+    //  Skip laying out every time a swipe begins.
+    if (self.subviewsBelowScrollViewLaidOut) {
+        return;
+    }
+    self.subviewsBelowScrollViewLaidOut = YES;
+    
+    [self.scrollView insertSubview:self.leftButtonContainerView belowSubview:self.scrollContentView];
+
+    [self.scrollView insertSubview:self.rightButtonContainerView belowSubview:self.scrollContentView];
+
+    CGFloat buttonHeight = self.frame.size.height; // use the cell height as the button width and height
+    
+    [self.buttonsOnLeft enumerateObjectsUsingBlock:^(HHSwipeButton *button, NSUInteger idx, BOOL *stop) {
+        NSAssert([button isKindOfClass:[HHSwipeButton class]], @"Button should be of class HHSwipeButton");
+
+        button.frame = CGRectMake(idx * self.buttonWidth, 0, self.buttonWidth, buttonHeight);
+        button.indexInContainer = idx;
+        button.swipeState = HHSwipeTableViewCellState_Left;
+        [button.tapGestureRecognizer addTarget:self action:@selector(buttonPressed:)];
+        button.tapGestureRecognizer.delegate = self;
+        [self.leftButtonContainerView addSubview:button];
+    }];
+
+    self.leftButtonContainerView.frame = CGRectMake(0, 0, self.buttonsOnLeft.count * self.buttonWidth, buttonHeight);
+
+    [self.buttonsOnRight enumerateObjectsUsingBlock:^(HHSwipeButton *button, NSUInteger idx, BOOL *stop) {
+        NSAssert([button isKindOfClass:[HHSwipeButton class]], @"Button should be of class HHSwipeButton");
+
+        button.frame = CGRectMake(idx * self.buttonWidth, 0, self.buttonWidth, buttonHeight);
+        button.indexInContainer = idx;
+        button.swipeState = HHSwipeTableViewCellState_Right;
+        [button.tapGestureRecognizer addTarget:self action:@selector(buttonPressed:)];
+        button.tapGestureRecognizer.delegate = self;
+        [self.rightButtonContainerView addSubview:button];
+    }];
+
+    self.rightButtonContainerView.frame = CGRectMake(self.frame.size.width - self.buttonsOnRight.count * self.buttonWidth, 0, self.buttonsOnRight.count * self.buttonWidth, buttonHeight);
 }
 
 - (void)scrollViewDidScroll:(UIScrollView*)scrollView
